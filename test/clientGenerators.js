@@ -52,6 +52,32 @@ test('get with url params', t=> {
     .catch(t.end)
 });
 
+test('get with query params', t=> {
+  const factory = client({
+    list: {
+      path: '/',
+      method: 'get',
+      query: ['username']
+    }
+  }, 'users');
+
+  const expected = {id: 666, email: 'foo@bar.com', username: 'foobar'};
+
+  const api = nock('http://localhost:5000')
+    .matchHeader('Authorization', 'Bearer hello')
+    .get('/users/?username=laurent')
+    .reply(200, expected);
+
+  factory({token: 'hello'})
+    .list({username: 'laurent'})
+    .then(users => {
+      t.ok(api.isDone());
+      t.deepEqual(users, expected);
+      t.end();
+    })
+    .catch(t.end)
+});
+
 test('get with multiple url params', t=> {
   const factory = client({
     self: {

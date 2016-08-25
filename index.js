@@ -1,9 +1,10 @@
 const tokens = require('./lib/tokens');
 const client = require('./lib/clients');
-const schema = require('./lib/schema');
+const publicSchema = require('./lib/schema');
 const stamp = require('stampit');
 
-module.exports = function () {
+module.exports = function (options = {}) {
+  const schema = options.schema || publicSchema;
   const sdk = {
     tokens
   };
