@@ -11,7 +11,7 @@ Generate namespaced http client based on schema definition using Bearer token au
 ## usage
 
 ```Javascript
-const factory = require('zdc-client').generate;
+const factory = require('zdc-client').bearer;
 const schema={
     list:{
         method:'get', // the HTTP verb
