@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/zorro-del-caribe/zdc-sdk.svg?style=svg)](https://circleci.com/gh/zorro-del-caribe/zdc-sdk)
 
-Generate namespaced http client based on schema definition using Bearer token authentication protocol.
+Generate namespaced http client based on schema definition using Bearer token authentication protocol or Basic authentication protocol.
 
 ## install
 
@@ -51,4 +51,23 @@ users({token:'foobar')
     .create({email:'foo@bar.com',username:'oufGuedin'}) // POST https://api.zdc.com/users/ Authorization: Bearer foobar, body : {email:'foo@bar.com', username:'oufGuedin'}
     .then(user=>{})
 
+
+//OR
+
+const basic = require('zdc-client').basic;
+
+const users = basic({/* .. options */);
+
+users({username:'foo',password:'bar'})
+    .list()
+    .then(users=>{});
+```
+
+Note: factories created are composable using [stampit](https://github.com/stampit-org/stampit)
+
+```Javascript
+const bearer = require('zdc-client').bearer;
+const users = bearer({schema:{},namespace:'users'});
+
+const extendUsers  = users.compose(/* some other stamp */);
 ```

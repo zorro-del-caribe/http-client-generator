@@ -1,7 +1,7 @@
 {
   "name": "zdc-client",
   "version": "1.0.0",
-  "description": "generate http client based on a schema definition",
+  "description": "generate http client for nodejs based on a schema definition",
   "main": "index.js",
   "scripts": {
     "test": "node ./test/index.js | tap-spec"
@@ -16,5 +16,6 @@
     "nock": "^8.0.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.0"
-  }
+  },
+  "keywords": ["http","client","request"]
 }

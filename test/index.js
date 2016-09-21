@@ -1,1 +1,2 @@
-require('./clientGenerators');
+require('./bearer');
+require('./basic');
