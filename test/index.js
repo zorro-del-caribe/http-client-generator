@@ -1,2 +1,1 @@
-require('./tokens');
 require('./clientGenerators');

@@ -1,18 +1,25 @@
 const test = require('tape');
 const nock = require('nock');
-const client = require('../lib/clients');
+const client = require('../index').bearer;
 
 test('simple get', t=> {
   const factory = client({
-    self: {
-      path: '/',
-      method: 'get'
+    schema: {
+      self: {
+        path: '/',
+        method: 'get'
+      }
+    },
+    namespace: 'users',
+    endpoint: {
+      protocol: 'https',
+      hostname: 'api.example.com'
     }
-  }, 'users');
+  });
 
   const expected = [{id: 666, email: 'foo@bar.com', username: 'foobar'}];
 
-  const api = nock('http://localhost:5000')
+  const api = nock('https://api.example.com')
     .matchHeader('Authorization', 'Bearer hello')
     .get('/users/')
     .reply(200, expected);
@@ -29,15 +36,17 @@ test('simple get', t=> {
 
 test('get with url params', t=> {
   const factory = client({
-    self: {
-      path: '/:clientId',
-      method: 'get'
-    }
-  }, 'users');
+    schema: {
+      self: {
+        path: '/:clientId',
+        method: 'get'
+      }
+    }, namespace: 'users'
+  });
 
   const expected = {id: 666, email: 'foo@bar.com', username: 'foobar'};
 
-  const api = nock('http://localhost:5000')
+  const api = nock('http://localhost:3000')
     .matchHeader('Authorization', 'Bearer hello')
     .get('/users/666')
     .reply(200, expected);
@@ -54,16 +63,18 @@ test('get with url params', t=> {
 
 test('get with query params', t=> {
   const factory = client({
-    list: {
-      path: '/',
-      method: 'get',
-      query: ['username']
-    }
-  }, 'users');
+    schema: {
+      list: {
+        path: '/',
+        method: 'get',
+        query: ['username']
+      }
+    }, namespace: 'users'
+  });
 
   const expected = {id: 666, email: 'foo@bar.com', username: 'foobar'};
 
-  const api = nock('http://localhost:5000')
+  const api = nock('http://localhost:3000')
     .matchHeader('Authorization', 'Bearer hello')
     .get('/users/?username=laurent')
     .reply(200, expected);
@@ -80,15 +91,17 @@ test('get with query params', t=> {
 
 test('get with multiple url params', t=> {
   const factory = client({
-    self: {
-      path: '/:clientId/foo/:bar',
-      method: 'get'
-    }
-  }, 'users');
+    schema: {
+      self: {
+        path: '/:clientId/foo/:bar',
+        method: 'get'
+      }
+    }, namespace: 'users'
+  });
 
   const expected = {id: 666, email: 'foo@bar.com', username: 'foobar'};
 
-  const api = nock('http://localhost:5000')
+  const api = nock('http://localhost:3000')
     .matchHeader('Authorization', 'Bearer hello')
     .get('/users/666/foo/7')
     .reply(200, expected);
@@ -105,15 +118,17 @@ test('get with multiple url params', t=> {
 
 test('get reject if missing url params', t=> {
   const factory = client({
-    self: {
-      path: '/:clientId',
-      method: 'get'
-    }
-  }, 'users');
+    schema: {
+      self: {
+        path: '/:clientId',
+        method: 'get'
+      }
+    }, namespace: 'users'
+  });
 
   const expected = {id: 666, email: 'foo@bar.com', username: 'foobar'};
 
-  const api = nock('http://localhost:5000')
+  const api = nock('http://localhost:3000')
     .matchHeader('Authorization', 'Bearer hello')
     .get('/users/666')
     .reply(200, expected);
@@ -133,16 +148,18 @@ test('get reject if missing url params', t=> {
 test('post method with body params only', t=> {
 
   const factory = client({
-    create: {
-      path: '/',
-      method: 'post',
-      body: ['email', 'username']
-    }
-  }, 'users');
+    schema: {
+      create: {
+        path: '/',
+        method: 'post',
+        body: ['email', 'username']
+      }
+    }, namespace: 'users'
+  });
 
   const expected = {id: 666, email: 'foo@bar.com', username: 'foobar'};
 
-  const api = nock('http://localhost:5000')
+  const api = nock('http://localhost:3000')
     .matchHeader('Authorization', 'Bearer hello')
     .post('/users/', {email: 'foo@bar.com', username: 'foobar'})
     .reply(201, expected);
@@ -159,16 +176,18 @@ test('post method with body params only', t=> {
 
 test('post method with body params only (adding existing params only)', t=> {
   const factory = client({
-    create: {
-      path: '/',
-      method: 'post',
-      body: ['email', 'username']
-    }
-  }, 'users');
+    schema: {
+      create: {
+        path: '/',
+        method: 'post',
+        body: ['email', 'username']
+      }
+    }, namespace: 'users'
+  });
 
   const expected = {id: 666, email: 'foo@bar.com', username: 'foobar'};
 
-  const api = nock('http://localhost:5000')
+  const api = nock('http://localhost:3000')
     .matchHeader('Authorization', 'Bearer hello')
     .post('/users/', {email: 'foo@bar.com'})
     .reply(201, expected);
@@ -185,14 +204,16 @@ test('post method with body params only (adding existing params only)', t=> {
 
 test('post method with body params forwarding errors', t=> {
   const factory = client({
-    create: {
-      path: '/',
-      method: 'post',
-      body: ['email', 'username']
-    }
-  }, 'users');
+    schema: {
+      create: {
+        path: '/',
+        method: 'post',
+        body: ['email', 'username']
+      }
+    }, namespace: 'users'
+  });
 
-  const api = nock('http://localhost:5000')
+  const api = nock('http://localhost:3000')
     .matchHeader('Authorization', 'Bearer hello')
     .post('/users/', {email: 'foo.bar.com'})
     .reply(422);
@@ -212,16 +233,18 @@ test('post method with body params forwarding errors', t=> {
 test('put method with body params only', t=> {
 
   const factory = client({
-    me: {
-      path: '/me',
-      method: 'put',
-      body: ['email', 'username']
-    }
-  }, 'users');
+    schema: {
+      me: {
+        path: '/me',
+        method: 'put',
+        body: ['email', 'username']
+      }
+    }, namespace: 'users'
+  });
 
   const expected = {id: 666, email: 'foo@bar.com', username: 'foobar'};
 
-  const api = nock('http://localhost:5000')
+  const api = nock('http://localhost:3000')
     .matchHeader('Authorization', 'Bearer hello')
     .put('/users/me', {email: 'foo@bar.com', username: 'foobar'})
     .reply(201, expected);
@@ -238,16 +261,18 @@ test('put method with body params only', t=> {
 
 test('put method with body params only (adding existing params only)', t=> {
   const factory = client({
-    me: {
-      path: '/me',
-      method: 'put',
-      body: ['email', 'username']
-    }
-  }, 'users');
+    schema: {
+      me: {
+        path: '/me',
+        method: 'put',
+        body: ['email', 'username']
+      }
+    }, namespace: 'users'
+  });
 
   const expected = {id: 666, email: 'foo@bar.com', username: 'foobar'};
 
-  const api = nock('http://localhost:5000')
+  const api = nock('http://localhost:3000')
     .matchHeader('Authorization', 'Bearer hello')
     .put('/users/me', {email: 'foo@bar.com'})
     .reply(201, expected);
@@ -264,14 +289,16 @@ test('put method with body params only (adding existing params only)', t=> {
 
 test('put method with body params forwarding errors', t=> {
   const factory = client({
-    me: {
-      path: '/me',
-      method: 'put',
-      body: ['email', 'username']
-    }
-  }, 'users');
+    schema: {
+      me: {
+        path: '/me',
+        method: 'put',
+        body: ['email', 'username']
+      }
+    }, namespace: 'users'
+  });
 
-  const api = nock('http://localhost:5000')
+  const api = nock('http://localhost:3000')
     .matchHeader('Authorization', 'Bearer hello')
     .put('/users/me', {email: 'foo.bar.com'})
     .reply(422);

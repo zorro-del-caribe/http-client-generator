@@ -1,15 +1,14 @@
 {
-  "name": "zdc",
+  "name": "zdc-client",
   "version": "1.0.0",
-  "description": "",
+  "description": "generate http client based on a schema definition",
   "main": "index.js",
   "scripts": {
     "test": "node ./test/index.js | tap-spec"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Laurent Renard",
+  "license": "MIT",
   "dependencies": {
-    "debug": "^2.2.0",
     "stampit": "^2.1.2",
     "superagent": "^2.1.0"
   },
