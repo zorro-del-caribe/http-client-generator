@@ -1,6 +1,6 @@
-# zdc-sdk
+# zdc-client
 
-[![CircleCI](https://circleci.com/gh/zorro-del-caribe/zdc-sdk.svg?style=svg)](https://circleci.com/gh/zorro-del-caribe/zdc-sdk)
+[![CircleCI](https://circleci.com/gh/zorro-del-caribe/http-client-generator.svg?style=svg)](https://circleci.com/gh/zorro-del-caribe/http-client-generator)
 
 Generate namespaced http client based on schema definition using Bearer token authentication protocol.
 
