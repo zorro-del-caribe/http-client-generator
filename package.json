@@ -1,6 +1,6 @@
 {
   "name": "zdc-client",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "generate http client for nodejs based on a schema definition",
   "main": "index.js",
   "scripts": {
