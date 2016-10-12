@@ -32,3 +32,15 @@ exports.basic = function (opts) {
           }
         }));
 };
+
+exports.noauth = function (opts) {
+  return lib(opts)
+    .compose(
+      stampit()
+        .methods({
+          auth(){
+            return this;
+          }
+        })
+    );
+};
